@@ -19,7 +19,25 @@ public typealias BlindCallback = () -> Void
 
 /// A function that you'd pass to another one as a callback, which doesn't need to know anything nor report anything.
 /// It can also throw an error if necessary.
+///
+/// - Throws: Some error, if a problem occurred while provessing the callback
 public typealias ThrowingBlindCallback = () throws -> Void
+
+
+
+/// A function that you'd pass to another one as a callback, which needs to know the result of the other one
+///
+/// - Parameter result: The result of the function that this one is passed to
+public typealias Callback<Result> = (_ result: Result) -> Void
+
+
+
+/// A function that you'd pass to another one as a callback, which needs to know the result of the other one. It can
+/// also throw an error if necessary.
+///
+/// - Parameter result: The result of the function that this one is passed to
+/// - Throws: Some error, if a problem occurred while provessing the callback
+public typealias ThrowingCallback<Result> = (_ result: Result) throws -> Void
 
 
 

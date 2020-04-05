@@ -46,6 +46,8 @@ Some typealiases for common functions:
 
 * `BlindCallback` and `ThrowingBlindCallback`
     * A function that you'd pass to another one as a callback, which doesn't need to know anything nor report anything 
+* `Callback` and `ThrowingCallback`
+    * A function that you'd pass to another one as a callback, which needs to know the result of the other one 
 
 
 ### Transformer family of functions ###
