@@ -79,6 +79,25 @@ public typealias ThrowingFilter<Element> = ThrowingTransformer<Element, Bool>
 
 
 
+// MARK: - Generator family
+
+/// A function which can generate an object without any input, like a zero-argument initializer, a randomizer, any
+/// `@autoclosure`, etc.
+///
+/// - Returns: Something it was meant to generate
+public typealias Generator<Output> = () -> Output
+
+
+
+/// A function which can generate an object without any input, like a zero-argument initializer, a randomizer, any
+/// `@autoclosure`, etc. It can also throw an error if necessary.
+///
+/// - Returns: Something it was meant to generate
+/// - Throws: Some error, if a problem occurred during generating
+public typealias ThrowingGenerator<Output> = () throws -> Output
+
+
+
 // MARK: - Reducer family
 
 /// A function which can reduce a sequence of elements into one value, like the kind you pass to a `reduce` function
