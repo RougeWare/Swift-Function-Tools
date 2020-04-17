@@ -6,8 +6,6 @@
 //  Copyright © 2020 Ben Leggiero BS-1-PS.
 //
 
-import Foundation
-
 
 
 /// This guarantees that even the most scrutinous of optimizers will never optimize-away these blackholes
@@ -19,6 +17,8 @@ private var blackholeAcceptor: Any? {
 
 
 /// A function which does nothing, but will never be optimized away. Useful for testing.
+///
+/// - SeeAlso: `null`
 @inline(never)
 public func blackhole() -> Void { }
 
@@ -30,7 +30,19 @@ public func blackhole() -> Void { }
 /// stuff.forEach(blackhole)
 /// ```
 ///
+/// ```
+/// struct MySwiftUIView_Previews: PreviewProvider {
+///     static var previews: some View {
+///         Group {
+///             MySwiftUIView(callback: blackhole)
+///         }
+///     }
+/// }
+/// ```
+///
 /// - Parameter a: Anything at all
+///
+/// - SeeAlso: `null`
 @inline(never)
 public func blackhole<A>(_ a: A) -> Void { blackholeAcceptor = a }
 
@@ -40,6 +52,8 @@ public func blackhole<A>(_ a: A) -> Void { blackholeAcceptor = a }
 /// - Parameters:
 ///     - a: Anything at all
 ///     - b: Anything at all
+///
+/// - SeeAlso: `null`
 @inline(never)
 public func blackhole<A, B>(_ a: A, _ b: B) -> Void { blackholeAcceptor = (a, b) }
 
@@ -50,6 +64,8 @@ public func blackhole<A, B>(_ a: A, _ b: B) -> Void { blackholeAcceptor = (a, b)
 ///     - a: Anything at all
 ///     - b: Anything at all
 ///     - c: Anything at all
+///
+/// - SeeAlso: `null`
 @inline(never)
 public func blackhole<A, B, C>(_ a: A, _ b: B, _ c: C) -> Void { blackholeAcceptor = (a, b, c) }
 
@@ -61,6 +77,8 @@ public func blackhole<A, B, C>(_ a: A, _ b: B, _ c: C) -> Void { blackholeAccept
 ///     - b: Anything at all
 ///     - c: Anything at all
 ///     - d: Anything at all
+///
+/// - SeeAlso: `null`
 @inline(never)
 public func blackhole<A, B, C, D>(_ a: A, _ b: B, _ c: C, _ d: D) -> Void { blackholeAcceptor = (a, b, c, d) }
 
@@ -72,6 +90,8 @@ public func blackhole<A, B, C, D>(_ a: A, _ b: B, _ c: C, _ d: D) -> Void { blac
 ///     - b: Anything at all
 ///     - c: Anything at all
 ///     - d: Anything at all
-///     - e: Anything at all     
+///     - e: Anything at all
+///
+/// - SeeAlso: `null`
 @inline(never)
 public func blackhole<A, B, C, D, E>(_ a: A, _ b: B, _ c: C, _ d: D, _ e: E) -> Void { blackholeAcceptor = (a, b, c, d, e) }
