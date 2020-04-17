@@ -12,6 +12,15 @@ stuff.forEach(blackhole)
 ```
 
 
+## `null` ##
+
+Like `blackhole`, this simply functions which take a value and do nothing with it. Unlike `blackhole`, this will always be optimized away in production code. Useful for giving to functions which demand a callback, when you don't have anything to do after it calls back.
+For example:
+```swift
+myObject.someAsyncFunction(onComplete: null)
+```
+
+
 ## `call` ##
 
 A utility function which simply calls the given function. This is useful for compressing higher-order functions.
@@ -57,6 +66,12 @@ Some typealiases for common functions:
 
 * `Filter` and `ThrowingFilter`
     * A function which can filter a sequence of elements, like the kind you pass to a `filter` function
+
+
+### Generator family of functions ###
+
+* `Generator` and `ThrowingGenerator`
+    * A function which can generate one thing without any input, like in an `@autoclosure`
 
 
 ### Reducer family of functions ###

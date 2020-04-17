@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  Curry.swift
 //  FunctionTools
 //
 //  Created by Ben Leggiero on 2020-04-02.
