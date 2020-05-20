@@ -45,6 +45,21 @@ let add = curry(+)
 ```
 
 
+## `echo` ##
+
+Simply returns what it's given. This is useful for reusing the input of higher-order functions.
+For example:
+```swift
+let withoutNils = arrayOfOptionals.compactMap(echo)
+```
+
+It's also useful for flattening collections of generators.
+For example:
+```swift
+let values = generators.map(echo)
+```
+
+
 ## Function Types ##
 
 Some typealiases for common functions:
