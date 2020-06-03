@@ -59,6 +59,12 @@ For example:
 let values = generators.map(echo)
 ```
 
+And for providing a predictable test function.
+For example:
+```swift
+Lazy(initializer: echo("Foo"))
+```
+
 
 ## Function Types ##
 
