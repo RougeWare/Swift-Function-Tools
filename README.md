@@ -77,6 +77,19 @@ MyView(textTranslator: constant("Bar")) // imagining `textTranslator` is like `(
 ```
 
 
+## `!` ##
+
+Converts any function which returns a `Bool` into one which returns the opposite value.
+For example:
+```swift
+public extension Array {
+    func exclude(by filter: @escaping Transformer<Element, Bool>) -> some LazySequenceProtocol {
+        self.lazy.filter(!mapper)
+    }
+}
+```
+
+
 ## Function Types ##
 
 Some typealiases for common functions:
