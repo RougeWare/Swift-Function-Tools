@@ -62,7 +62,7 @@ let values = generators.map(echo)
 
 ## `!` ##
 
-Converts any function which returns a `Bool` into one which returns the opposite bool.
+Converts any function which returns a `Bool` into one which returns the opposite value.
 For example:
 ```swift
 public extension Array {
