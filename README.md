@@ -66,6 +66,17 @@ Lazy(initializer: echo("Foo"))
 ```
 
 
+## `constant` ##
+
+Simply returns a function with a constant output. This is useful when making a test/preview where you always want the same output.
+
+```swift
+Lazy(initializer: constant("Foo"))
+
+MyView(textTranslator: constant("Bar")) // imagining `textTranslator` is like `(String) -> String`
+```
+
+
 ## Function Types ##
 
 Some typealiases for common functions:
