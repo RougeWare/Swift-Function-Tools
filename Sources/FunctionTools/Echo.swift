@@ -23,6 +23,22 @@ import Foundation
 public func echo<T>(_ input: T) -> T { input }
 
 
+
+/// A utility function which simply returns a function which always returns the given value.
+/// This is useful for providing a predictable test function
+///
+/// For example:
+/// ```swift
+/// Lazy(initializer: echo("Foo"))
+/// ```
+///
+/// - Parameter value: The value to return from the returned function
+/// - Returns: A function which always returns the given value
+@inlinable
+public func echo<T>(_ value: T) -> Generator<T> {{ value }}
+
+
+
 /// A utility function which simply returns the result of the given function.
 /// This is useful for flattening collections of generators.
 ///
