@@ -12,8 +12,14 @@ let package = Package(
             name: "FunctionTools",
             targets: ["FunctionTools"]),
         
+        // DEPRECATED: Does not play nice with App Store requirements
         .library(
             name: "FunctionTools_dynamic",
+            type: .dynamic,
+            targets: ["FunctionTools"]),
+        
+        .library(
+            name: "FunctionToolsDynamic",
             type: .dynamic,
             targets: ["FunctionTools"]),
     ],
