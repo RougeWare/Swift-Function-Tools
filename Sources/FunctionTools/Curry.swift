@@ -10,6 +10,11 @@ import Foundation
 
 
 
+/// The type of function returned by ``curry(_:)``
+public typealias Curry<A, B, C> = Transformer<A, Transformer<B, C>>
+
+
+
 /// Converts a non-currying function into a currying function
 ///
 /// ```swift
@@ -19,6 +24,6 @@ import Foundation
 ///
 /// - Parameter f: The function to convert
 /// - Returns: A currying form of the given function
-func curry<A, B, C>(_ f: @escaping Combinator<A, B, C>) -> Transformer<A, Transformer<B, C>> {
+public func curry<A, B, C>(_ f: @escaping Combinator<A, B, C>) -> Curry<A, B, C> {
     return { a in { b in f(a, b) } }
 }
