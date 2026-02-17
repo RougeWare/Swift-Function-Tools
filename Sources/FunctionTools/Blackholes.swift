@@ -20,6 +20,7 @@ private var blackholeAcceptor: Any? {
 ///
 /// - SeeAlso: `null`
 @inline(never)
+@Sendable
 public func blackhole() -> Void { }
 
 
@@ -44,6 +45,7 @@ public func blackhole() -> Void { }
 ///
 /// - SeeAlso: `null`
 @inline(never)
+@Sendable
 public func blackhole<A>(_ a: A) -> Void { blackholeAcceptor = a }
 
 
@@ -55,6 +57,7 @@ public func blackhole<A>(_ a: A) -> Void { blackholeAcceptor = a }
 ///
 /// - SeeAlso: `null`
 @inline(never)
+@Sendable
 public func blackhole<A, B>(_ a: A, _ b: B) -> Void { blackholeAcceptor = (a, b) }
 
 
@@ -67,6 +70,7 @@ public func blackhole<A, B>(_ a: A, _ b: B) -> Void { blackholeAcceptor = (a, b)
 ///
 /// - SeeAlso: `null`
 @inline(never)
+@Sendable
 public func blackhole<A, B, C>(_ a: A, _ b: B, _ c: C) -> Void { blackholeAcceptor = (a, b, c) }
 
 
@@ -80,6 +84,7 @@ public func blackhole<A, B, C>(_ a: A, _ b: B, _ c: C) -> Void { blackholeAccept
 ///
 /// - SeeAlso: `null`
 @inline(never)
+@Sendable
 public func blackhole<A, B, C, D>(_ a: A, _ b: B, _ c: C, _ d: D) -> Void { blackholeAcceptor = (a, b, c, d) }
 
 
@@ -94,4 +99,5 @@ public func blackhole<A, B, C, D>(_ a: A, _ b: B, _ c: C, _ d: D) -> Void { blac
 ///
 /// - SeeAlso: `null`
 @inline(never)
+@Sendable
 public func blackhole<A, B, C, D, E>(_ a: A, _ b: B, _ c: C, _ d: D, _ e: E) -> Void { blackholeAcceptor = (a, b, c, d, e) }

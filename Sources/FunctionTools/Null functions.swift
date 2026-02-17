@@ -13,6 +13,7 @@
 ///
 /// - SeeAlso: `blackhole`
 @inline(__always)
+@Sendable
 public func null() { }
 
 
@@ -28,6 +29,7 @@ public func null() { }
 ///
 /// - SeeAlso: `blackhole`
 @inline(__always)
+@Sendable
 public func null<A>(_ a: A) { }
 
 
@@ -40,6 +42,7 @@ public func null<A>(_ a: A) { }
 ///
 /// - SeeAlso: `blackhole`
 @inline(__always)
+@Sendable
 public func null<A, B>(_ a: A, _ b: B) { }
 
 
@@ -53,6 +56,7 @@ public func null<A, B>(_ a: A, _ b: B) { }
 ///
 /// - SeeAlso: `blackhole`
 @inline(__always)
+@Sendable
 public func null<A, B, C>(_ a: A, _ b: B, _ c: C) { }
 
 
@@ -67,6 +71,7 @@ public func null<A, B, C>(_ a: A, _ b: B, _ c: C) { }
 ///
 /// - SeeAlso: `blackhole`
 @inline(__always)
+@Sendable
 public func null<A, B, C, D>(_ a: A, _ b: B, _ c: C, _ d: D) { }
 
 
@@ -82,5 +87,6 @@ public func null<A, B, C, D>(_ a: A, _ b: B, _ c: C, _ d: D) { }
 ///
 /// - SeeAlso: `blackhole`
 @inline(__always)
+@Sendable
 public func null<A, B, C, D, E>(_ a: A, _ b: B, _ c: C, _ d: D, _ e: E) { }
 
