@@ -51,3 +51,24 @@ public func echo<T>(_ value: T) -> Generator<T> {{ value }}
 /// - Throws: Anything `inputGenerator` throws
 @inlinable
 public func echo<T>(_ inputGenerator: ThrowingGenerator<T>) rethrows -> T { try inputGenerator() }
+
+
+
+/// A utility function which simply returns the given value.
+/// This is useful for reusing the input of higher-order functions.
+///
+/// For example:
+/// ```swift
+/// takesAsyncFunction(echo(.asyncValue))
+/// ```
+///
+/// - Parameter input: The value to return
+@available(iOS 13, *)
+func echo<Output>(_ generator: @escaping @autoclosure AsyncGenerator<Output>) async -> AsyncGenerator<Output> { generator }
+
+@available(iOS 13, *)
+func call<T>(_ generator: AsyncGenerator<T>) async -> T {
+    await generator()
+}
+
+
