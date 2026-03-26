@@ -10,6 +10,8 @@ import Foundation
 
 
 
+// MARK: - Blind callbacks
+
 /// A utility function which simply calls the given function. This is useful for compressing higher-order functions
 ///
 /// For example:
@@ -48,3 +50,51 @@ public func call(_ callee: ThrowingBlindCallback) rethrows {
 public func call(_ callee: BlindCallback) {
     callee()
 }
+
+
+
+// MARK: - Generators
+
+/// A utility function which simply returns the result of the given function.
+/// This is useful for flattening collections of generators.
+///
+/// For example:
+/// ```swift
+/// let values = generators.map(call)
+/// ```
+///
+/// - Parameter inputGenerator: The function which generates a value
+/// - Throws: Anything `inputGenerator` throws
+@inlinable
+public func call<T>(_ inputGenerator: Generator<T>) -> T { inputGenerator() }
+
+
+
+/// A utility function which simply returns the result of the given function.
+/// This is useful for flattening collections of generators.
+///
+/// For example:
+/// ```swift
+/// let values = generators.map(call)
+/// ```
+///
+/// - Parameter inputGenerator: The function which generates a value
+/// - Throws: Anything `inputGenerator` throws
+@inlinable
+public func call<T>(_ inputGenerator: ThrowingGenerator<T>) rethrows -> T { try inputGenerator() }
+
+
+
+/// A utility function which simply returns the result of the given function.
+/// This is useful for flattening collections of generators.
+///
+/// For example:
+/// ```swift
+/// async let values = asyncGenerators.map(call).collect()
+/// ```
+///
+/// - Parameter inputGenerator: The function which generates a value
+/// - Throws: Anything `inputGenerator` throws
+@available(iOS 13, *)
+@inlinable
+public func call<T, Failure: Error>(_ generator: AsyncThrowingGenerator<T, Failure>) async throws(Failure) -> T { try await generator() }

@@ -10,6 +10,8 @@ import Foundation
 
 
 
+// MARK: - `echo` a value
+
 /// A utility function which simply returns the given value.
 /// This is useful for reusing the input of higher-order functions.
 ///
@@ -24,6 +26,8 @@ public func echo<T>(_ input: T) -> T { input }
 
 
 
+// MARK: - `echo` a value generator
+
 /// A utility function which simply returns a function which always returns the given value.
 /// This is useful for providing a predictable test function
 ///
@@ -35,40 +39,22 @@ public func echo<T>(_ input: T) -> T { input }
 /// - Parameter value: The value to return from the returned function
 /// - Returns: A function which always returns the given value
 @inlinable
+@_disfavoredOverload
 public func echo<T>(_ value: T) -> Generator<T> {{ value }}
 
 
 
-/// A utility function which simply returns the result of the given function.
-/// This is useful for flattening collections of generators.
+/// A utility function which simply returns a function which always returns the given value.
+/// This is useful for providing a predictable test function
 ///
 /// For example:
 /// ```swift
-/// let values = generators.map(echo)
+/// AsyncLazy(initializer: echo("Foo"))
 /// ```
 ///
-/// - Parameter inputGenerator: The function which generates a value
-/// - Throws: Anything `inputGenerator` throws
+/// - Parameter value: The value to return from the returned function
+/// - Returns: A function which always returns the given value
+@available(iOS 13, *)
 @inlinable
-public func echo<T>(_ inputGenerator: ThrowingGenerator<T>) rethrows -> T { try inputGenerator() }
-
-
-
-/// A utility function which simply returns the given value.
-/// This is useful for reusing the input of higher-order functions.
-///
-/// For example:
-/// ```swift
-/// takesAsyncFunction(echo(.asyncValue))
-/// ```
-///
-/// - Parameter input: The value to return
-@available(iOS 13, *)
-func echo<Output>(_ generator: @escaping @autoclosure AsyncGenerator<Output>) async -> AsyncGenerator<Output> { generator }
-
-@available(iOS 13, *)
-func call<T>(_ generator: AsyncGenerator<T>) async -> T {
-    await generator()
-}
-
-
+@_disfavoredOverload
+public func echo<T>(_ value: T) -> AsyncGenerator<T> {{ value }}
