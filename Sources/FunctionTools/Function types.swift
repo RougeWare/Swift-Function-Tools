@@ -98,6 +98,29 @@ public typealias ThrowingGenerator<Output> = () throws -> Output
 
 
 
+/// A function which can generate an object without any input, like a zero-argument initializer, a randomizer, any `@autoclosure`, etc. It can also run in another concurrency context if necessary.
+///
+/// - Returns: Something it was meant to generate
+@available(macOS 10.15, *)
+@available(iOS 13, *)
+@available(tvOS 13, *)
+@available(watchOS 6, *)
+public typealias AsyncGenerator<Output> = () async -> Output
+
+
+
+/// A function which can generate an object without any input, like a zero-argument initializer, a randomizer, any `@autoclosure`, etc. It can also throw an error andor run in another concurrency context if necessary.
+///
+/// - Returns: Something it was meant to generate
+/// - Throws: Some error, if a problem occurred during generating
+@available(macOS 10.15, *)
+@available(iOS 13, *)
+@available(tvOS 13, *)
+@available(watchOS 6, *)
+public typealias AsyncThrowingGenerator<Output, Failure: Error> = () async throws(Failure) -> Output
+
+
+
 // MARK: - Reducer family
 
 /// A function which can reduce a sequence of elements into one value, like the kind you pass to a `reduce` function
