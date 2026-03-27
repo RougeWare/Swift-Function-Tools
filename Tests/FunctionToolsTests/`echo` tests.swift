@@ -250,15 +250,6 @@ struct EchoSyncGeneratorTests {
 
 // MARK: - echo<T>(_ value: T) -> AsyncGenerator<T>
 
-private func asyncValue<T: Sendable>(_ value: T) async -> T {
-    await Task {
-        try? await Task.sleep(for: .milliseconds(.random(in: 0...15)))
-        return value
-    }
-    .value
-}
-
-
 private var asyncValue_42: Int { get async {
     await asyncValue(42)
 }}
@@ -323,7 +314,7 @@ struct EchoAsyncGeneratorTests {
         let point = Point(x: 8, y: 16)
         let gen: AsyncGenerator<Point> = await echo(asyncValue(point))
         let result = await gen()
-        #expect(await result == point)
+        #expect(result == point)
     }
     
     

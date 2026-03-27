@@ -16,18 +16,18 @@ import Foundation
 ///
 /// For example:
 /// ```swift
-/// let someFunctions: [BlindCallback] = [
-///     { print("Hello") },
-///     { print("World!") },
+/// let someFunctions: [ThrowingBlindCallback<SendError>] = [
+///     { try send("Hello") },
+///     { try send("World!") },
 /// ]
 ///
-/// someFunctions.forEach(call)
+/// try someFunctions.forEach(call)
 /// ```
 ///
 /// - Parameter callee: The function to call
 /// - Throws: Anything `callee` throws
 @inlinable
-public func call(_ callee: ThrowingBlindCallback) rethrows {
+public func call<Failure: Error>(_ callee: ThrowingBlindCallback<Failure>) rethrows {
     try callee()
 }
 
@@ -75,13 +75,13 @@ public func call<T>(_ inputGenerator: Generator<T>) -> T { inputGenerator() }
 ///
 /// For example:
 /// ```swift
-/// let values = generators.map(call)
+/// let values = try failableGenerators.map(call)
 /// ```
 ///
 /// - Parameter inputGenerator: The function which generates a value
 /// - Throws: Anything `inputGenerator` throws
 @inlinable
-public func call<T>(_ inputGenerator: ThrowingGenerator<T>) rethrows -> T { try inputGenerator() }
+public func call<T, Failure: Error>(_ inputGenerator: ThrowingGenerator<T, Failure>) throws(Failure) -> T { try inputGenerator() }
 
 
 
@@ -109,7 +109,7 @@ public func call<T>(_ generator: AsyncGenerator<T>) async -> T { await generator
 ///
 /// For example:
 /// ```swift
-/// async let values = asyncGenerators.map(call).collect()
+/// async let values = try asyncFailableGenerators.map(call).collect()
 /// ```
 ///
 /// - Parameter inputGenerator: The function which generates a value
