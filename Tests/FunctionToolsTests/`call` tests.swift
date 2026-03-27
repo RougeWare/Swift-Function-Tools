@@ -36,14 +36,14 @@ struct CallThrowingGeneratorTests {
     
     @Test("Returns the value produced by a non-throwing `ThrowingGenerator<Int>`")
     func nonThrowingGeneratorReturnsInt() throws {
-        let result: Int = try call({ try throwingValue_67_nothrows } as ThrowingGenerator<Int>)
+        let result: Int = try call({ () throws(Error) in try throwingValue_67_nothrows } as ThrowingGenerator<Int, Error>)
         #expect(result == 67)
     }
     
     
     @Test("Returns the value produced by a non-throwing `ThrowingGenerator<String>`")
     func nonThrowingGeneratorReturnsString() throws {
-        let result = try call({ try throwingValue_snafu_nothrows } as ThrowingGenerator<String>)
+        let result = try call({ () throws(Error) in try throwingValue_snafu_nothrows } as ThrowingGenerator<String, Error>)
         #expect(result == "snafu")
     }
     
@@ -51,7 +51,7 @@ struct CallThrowingGeneratorTests {
     @Test("Returns the value produced by a non-throwing `ThrowingGenerator<Point>`")
     func nonThrowingGeneratorReturnsStruct() throws {
         let expected = Point(x: 2, y: 9)
-        let result = try call({ expected } as ThrowingGenerator<Point>)
+        let result = try call({ () throws(Error) in expected } as ThrowingGenerator<Point, Error>)
         #expect(result == expected)
     }
     
@@ -60,7 +60,7 @@ struct CallThrowingGeneratorTests {
     func throwingGeneratorPropagatesError() {
         // `echo` must rethrow without wrapping or swallowing the original error.
         #expect(throws: TestError.self) {
-            try call({ throw TestError() } as ThrowingGenerator<Int>)
+            try call({ () throws(TestError) in throw TestError() } as ThrowingGenerator<Int, TestError>)
         }
     }
     
@@ -68,7 +68,7 @@ struct CallThrowingGeneratorTests {
     @Test("Propagates an error thrown by a `ThrowingGenerator<String>`")
     func throwingStringGeneratorPropagatesError() {
         #expect(throws: TestError.self) {
-            try call({ throw TestError() } as ThrowingGenerator<String>)
+            try call({ () throws(TestError) in throw TestError() } as ThrowingGenerator<String, TestError>)
         }
     }
     
@@ -76,19 +76,20 @@ struct CallThrowingGeneratorTests {
     @Test("Can flatten a `[ThrowingGenerator<Int>]` via `map(echo)`")
     func flattenCollectionOfGenerators() throws {
         // This is the canonical usage shown in the documentation.
-        let generators: [ThrowingGenerator<Int>] = [{ 1 }, { 2 }, { 3 }]
+        let generators: [ThrowingGenerator<Int, Error>] = [{ 1 }, { 2 }, { 3 }]
         let values = try generators.map(call)
         #expect(values == [1, 2, 3])
     }
     
     
+    @available(macOS 15, *)
     @Test("Stops at the first throwing generator when used with `map(echo)`")
     func mapStopsAtFirstThrowingGenerator() {
         var callCount = 0
-        let generators: [ThrowingGenerator<Int>] = [
-            { callCount += 1; return 1 },
-            { throw TestError() },
-            { callCount += 1; return 3 },   // must never be reached
+        let generators: [ThrowingGenerator<Int, Error>] = [ // TODO: Set this to `TestError` once the compiler doesn't crash doing that
+            { () throws(TestError) in callCount += 1; return 1 },
+            { () throws(TestError) in throw TestError() },
+            { () throws(TestError) in callCount += 1; return 3 },   // must never be reached
         ]
         #expect(throws: TestError.self) {
             _ = try generators.map(call)
@@ -112,22 +113,22 @@ struct CallThrowingGeneratorTests {
 struct CallAsyncGeneratorTests {
     
     
-    @Test("Returns the value produced by a non-throwing `AsyncThrowingGenerator<Int, _>`")
-    func nonThrowingAsyncGeneratorReturnsInt() async throws {
+    @Test("Returns the value produced by a non-throwing `AsyncGenerator<Int>`")
+    func nonThrowingAsyncGeneratorReturnsInt() async {
         let result = await call({ 77 } as AsyncGenerator<Int>)
         #expect(result == 77)
     }
     
     
-    @Test("Returns the value produced by a non-throwing `AsyncThrowingGenerator<String, _>`")
-    func nonThrowingAsyncGeneratorReturnsString() async throws {
+    @Test("Returns the value produced by a non-throwing `AsyncGenerator<String>`")
+    func nonThrowingAsyncGeneratorReturnsString() async {
         let result = await call({ "async produced" } as AsyncGenerator<String>)
         #expect(result == "async produced")
     }
     
     
-    @Test("Returns the value produced by a non-throwing `AsyncThrowingGenerator<Point, _>`")
-    func nonThrowingAsyncGeneratorReturnsStruct() async throws {
+    @Test("Returns the value produced by a non-throwing `AsyncGenerator<Point>`")
+    func nonThrowingAsyncGeneratorReturnsStruct() async {
         let expected = Point(x: 11, y: 22)
         let result = await call({ expected } as AsyncGenerator<Point>)
         #expect(result == expected)
@@ -135,10 +136,10 @@ struct CallAsyncGeneratorTests {
     
     
     @available(macOS 15, *)
-    @Test("Can flatten a sequence of `AsyncThrowingGenerator<Int, _>` values iteratively")
-    func flattenSequenceOfAsyncGenerators() async throws {
+    @Test("Can flatten a sequence of `AsyncGenerator<Int>` values iteratively")
+    func flattenSequenceOfAsyncGenerators() async {
         // Mirrors the `map(echo)` pattern from the documentation, adapted for async.
-        let generators: [AsyncGenerator<Int>] = [{ 10 }, { 20 }, { 30 }]
+        let generators: [AsyncGenerator<Int>] = [{ await asyncValue(10) }, { await asyncValue(20) }, { await asyncValue(30) }]
         var results: [Int] = []
         for gen in generators {
             await results.append(call(gen))
@@ -148,7 +149,7 @@ struct CallAsyncGeneratorTests {
     
     
     @Test("Correctly awaits a generator that itself suspends before producing a value")
-    func generatorThatSuspendsIsAwaited() async throws {
+    func generatorThatSuspendsIsAwaited() async {
         // Verifies that `echo` does not short-circuit the async lifecycle —
         // i.e., it genuinely awaits the generator rather than returning prematurely.
         let gen: AsyncGenerator<Int> = {
@@ -176,14 +177,14 @@ struct CallAsyncThrowingGeneratorTests {
     
     @Test("Returns the value produced by a non-throwing `AsyncThrowingGenerator<Int, _>`")
     func nonThrowingAsyncGeneratorReturnsInt() async throws {
-        let result = try await call({ 77 } as AsyncThrowingGenerator<Int, TestError>)
+        let result = try await call({ () throws(TestError) in await asyncValue(77) } as AsyncThrowingGenerator<Int, TestError>)
         #expect(result == 77)
     }
     
     
     @Test("Returns the value produced by a non-throwing `AsyncThrowingGenerator<String, _>`")
     func nonThrowingAsyncGeneratorReturnsString() async throws {
-        let result = try await call({ "async produced" } as AsyncThrowingGenerator<String, TestError>)
+        let result = try await call({ () throws(TestError) in await asyncValue("async produced") } as AsyncThrowingGenerator<String, TestError>)
         #expect(result == "async produced")
     }
     
@@ -191,7 +192,7 @@ struct CallAsyncThrowingGeneratorTests {
     @Test("Returns the value produced by a non-throwing `AsyncThrowingGenerator<Point, _>`")
     func nonThrowingAsyncGeneratorReturnsStruct() async throws {
         let expected = Point(x: 11, y: 22)
-        let result = try await call({ expected } as AsyncThrowingGenerator<Point, TestError>)
+        let result = try await call({ () throws(TestError) in await asyncValue(expected) } as AsyncThrowingGenerator<Point, TestError>)
         #expect(result == expected)
     }
     
@@ -217,7 +218,11 @@ struct CallAsyncThrowingGeneratorTests {
     @Test("Can flatten a sequence of `AsyncThrowingGenerator<Int, _>` values iteratively")
     func flattenSequenceOfAsyncGenerators() async throws {
         // Mirrors the `map(echo)` pattern from the documentation, adapted for async.
-        let generators: [AsyncThrowingGenerator<Int, TestError>] = [{ 10 }, { 20 }, { 30 }]
+        let generators: [AsyncThrowingGenerator<Int, Error>] = [ // TODO: Set this to `TestError` once the compiler doesn't crash doing that
+            { () throws(TestError) in await asyncValue(10) },
+            { () throws(TestError) in await asyncValue(20) },
+            { () throws(TestError) in await asyncValue(30) }
+        ]
         var results: [Int] = []
         for gen in generators {
             try await results.append(call(gen))
@@ -230,7 +235,7 @@ struct CallAsyncThrowingGeneratorTests {
     func generatorThatSuspendsIsAwaited() async throws {
         // Verifies that `echo` does not short-circuit the async lifecycle —
         // i.e., it genuinely awaits the generator rather than returning prematurely.
-        let gen: AsyncThrowingGenerator<Int, TestError> = {
+        let gen: AsyncThrowingGenerator<Int, TestError> = { () throws(TestError) in
             await Task.yield()
             return 42
         }

@@ -8,6 +8,17 @@
 import Foundation
 
 
+// MARK: - value transformers
+
+func asyncValue<T: Sendable>(_ value: T) async -> T {
+    await Task {
+        try? await Task.sleep(for: .milliseconds(.random(in: 0...15)))
+        return value
+    }
+    .value
+}
+
+
 
 // MARK: - data structures
 
