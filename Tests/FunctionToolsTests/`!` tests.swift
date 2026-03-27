@@ -34,9 +34,5 @@ final class ExclamationPoint_Tests: XCTestCase {
             "John Doe",
         ])
     }
-    
-    static var allTests = [
-        ("testExclamationPoint", testExclamationPoint),
-    ]
 }
 

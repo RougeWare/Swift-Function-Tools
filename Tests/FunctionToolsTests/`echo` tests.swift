@@ -250,7 +250,7 @@ struct EchoSyncGeneratorTests {
 
 // MARK: - echo<T>(_ value: T) -> AsyncGenerator<T>
 
-private func asyncValue<T>(_ value: T) async -> T {
+private func asyncValue<T: Sendable>(_ value: T) async -> T {
     await Task {
         try? await Task.sleep(for: .milliseconds(.random(in: 0...15)))
         return value
