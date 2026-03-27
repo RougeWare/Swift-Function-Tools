@@ -54,7 +54,10 @@ public func echo<T>(_ value: T) -> Generator<T> {{ value }}
 ///
 /// - Parameter value: The value to return from the returned function
 /// - Returns: A function which always returns the given value
+@available(macOS 10.15, *)
 @available(iOS 13, *)
+@available(tvOS 13, *)
+@available(watchOS 6, *)
 @inlinable
 @_disfavoredOverload
 public func echo<T>(_ value: T) -> AsyncGenerator<T> {{ value }}

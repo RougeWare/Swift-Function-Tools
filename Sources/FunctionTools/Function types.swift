@@ -101,7 +101,10 @@ public typealias ThrowingGenerator<Output> = () throws -> Output
 /// A function which can generate an object without any input, like a zero-argument initializer, a randomizer, any `@autoclosure`, etc. It can also run in another concurrency context if necessary.
 ///
 /// - Returns: Something it was meant to generate
+@available(macOS 10.15, *)
 @available(iOS 13, *)
+@available(tvOS 13, *)
+@available(watchOS 6, *)
 public typealias AsyncGenerator<Output> = () async -> Output
 
 
@@ -110,7 +113,10 @@ public typealias AsyncGenerator<Output> = () async -> Output
 ///
 /// - Returns: Something it was meant to generate
 /// - Throws: Some error, if a problem occurred during generating
+@available(macOS 10.15, *)
 @available(iOS 13, *)
+@available(tvOS 13, *)
+@available(watchOS 6, *)
 public typealias AsyncThrowingGenerator<Output, Failure: Error> = () async throws(Failure) -> Output
 
 

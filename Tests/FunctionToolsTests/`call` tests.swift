@@ -11,8 +11,6 @@ import FunctionTools
 
 
 
-// MARK: - echo<T>(_ inputGenerator: ThrowingGenerator<T>) rethrows -> T
-
 private var throwingValue_67_nothrows: Int { get throws {
     67
 }}
@@ -23,6 +21,8 @@ private var throwingValue_snafu_nothrows: String { get throws {
 }}
 
 
+
+// MARK: - call<T>(_: ThrowingGenerator<T>) rethrows -> T
 
 /// Validates the throwing-generator-invocation overload.
 ///
@@ -100,7 +100,69 @@ struct CallThrowingGeneratorTests {
 
 
 
-// MARK: - call<T, Failure: Error>(_ generator: AsyncThrowingGenerator<T, Failure>) async rethrows -> T
+// MARK: - call<T>(_: AsyncGenerator<T>) async -> T
+
+/// Validates the async throwing-generator-invocation overload.
+///
+/// Like its synchronous counterpart, this overload awaits and invokes the generator
+/// immediately. It is the async analogue for flattening collections of async generators.
+///
+/// Overload resolved by the `AsyncThrowingGenerator<T, Failure>` argument type.
+@Suite("`call` — `AsyncThrowingGenerator` invocation")
+struct CallAsyncGeneratorTests {
+    
+    
+    @Test("Returns the value produced by a non-throwing `AsyncThrowingGenerator<Int, _>`")
+    func nonThrowingAsyncGeneratorReturnsInt() async throws {
+        let result = await call({ 77 } as AsyncGenerator<Int>)
+        #expect(result == 77)
+    }
+    
+    
+    @Test("Returns the value produced by a non-throwing `AsyncThrowingGenerator<String, _>`")
+    func nonThrowingAsyncGeneratorReturnsString() async throws {
+        let result = await call({ "async produced" } as AsyncGenerator<String>)
+        #expect(result == "async produced")
+    }
+    
+    
+    @Test("Returns the value produced by a non-throwing `AsyncThrowingGenerator<Point, _>`")
+    func nonThrowingAsyncGeneratorReturnsStruct() async throws {
+        let expected = Point(x: 11, y: 22)
+        let result = await call({ expected } as AsyncGenerator<Point>)
+        #expect(result == expected)
+    }
+    
+    
+    @available(macOS 15, *)
+    @Test("Can flatten a sequence of `AsyncThrowingGenerator<Int, _>` values iteratively")
+    func flattenSequenceOfAsyncGenerators() async throws {
+        // Mirrors the `map(echo)` pattern from the documentation, adapted for async.
+        let generators: [AsyncGenerator<Int>] = [{ 10 }, { 20 }, { 30 }]
+        var results: [Int] = []
+        for gen in generators {
+            await results.append(call(gen))
+        }
+        #expect(results == [10, 20, 30])
+    }
+    
+    
+    @Test("Correctly awaits a generator that itself suspends before producing a value")
+    func generatorThatSuspendsIsAwaited() async throws {
+        // Verifies that `echo` does not short-circuit the async lifecycle —
+        // i.e., it genuinely awaits the generator rather than returning prematurely.
+        let gen: AsyncGenerator<Int> = {
+            await Task.yield()
+            return 42
+        }
+        let result = await call(gen)
+        #expect(result == 42)
+    }
+}
+
+
+
+// MARK: - call<T, Failure: Error>(_: AsyncThrowingGenerator<T, Failure>) async throws(Failure) -> T
 
 /// Validates the async throwing-generator-invocation overload.
 ///
@@ -175,5 +237,4 @@ struct CallAsyncThrowingGeneratorTests {
         let result = try await call(gen)
         #expect(result == 42)
     }
-    
 }

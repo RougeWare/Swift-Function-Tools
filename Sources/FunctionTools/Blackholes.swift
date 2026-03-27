@@ -9,7 +9,7 @@
 
 
 /// This guarantees that even the most scrutinous of optimizers will never optimize-away these blackholes
-private var blackholeAcceptor: Any? {
+private nonisolated(unsafe) var blackholeAcceptor: Any? { //unsafe: Since this does nothing with the data, the concept of data safety doesn't apply anyway. Marking this as nonisolated eases the compiler's concerns about safe concurrency.
     didSet {
         blackholeAcceptor = nil
     }

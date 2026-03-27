@@ -32,7 +32,7 @@ struct EchoIdentityTests {
     
     @Test("Returns an `Int` value unchanged")
     func returnsInt() {
-        let result: Int = echo(42)
+        let result = echo(42)
         #expect(result == 42)
     }
     

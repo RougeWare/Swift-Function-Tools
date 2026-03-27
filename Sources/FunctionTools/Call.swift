@@ -95,6 +95,28 @@ public func call<T>(_ inputGenerator: ThrowingGenerator<T>) rethrows -> T { try 
 ///
 /// - Parameter inputGenerator: The function which generates a value
 /// - Throws: Anything `inputGenerator` throws
+@available(macOS 10.15, *)
 @available(iOS 13, *)
+@available(tvOS 13, *)
+@available(watchOS 6, *)
+@inlinable
+public func call<T>(_ generator: AsyncGenerator<T>) async -> T { await generator() }
+
+
+
+/// A utility function which simply returns the result of the given function.
+/// This is useful for flattening collections of generators.
+///
+/// For example:
+/// ```swift
+/// async let values = asyncGenerators.map(call).collect()
+/// ```
+///
+/// - Parameter inputGenerator: The function which generates a value
+/// - Throws: Anything `inputGenerator` throws
+@available(macOS 10.15, *)
+@available(iOS 13, *)
+@available(tvOS 13, *)
+@available(watchOS 6, *)
 @inlinable
 public func call<T, Failure: Error>(_ generator: AsyncThrowingGenerator<T, Failure>) async throws(Failure) -> T { try await generator() }
