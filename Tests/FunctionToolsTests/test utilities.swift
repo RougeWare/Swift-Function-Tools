@@ -37,3 +37,11 @@ struct Point: Equatable {
 
 /// A reference type used to verify that identity (===) is preserved when something is handed a class instance.
 final class Token {}
+
+
+
+// MARK: - values
+
+/// One UUID which is guaranteed to remain the same value per test runtime
+let uuid = UUID()
+
